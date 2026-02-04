@@ -10,21 +10,21 @@ const isOpen = ref(false)
     <div class="max-w-screen-xl flex items-center justify-between mx-auto p-4">
       
       <!-- Logo -->
-      <RouterLink to="/" class="inline-flex items-center justify-center h-10 px-4 rounded-full text-heading hover:bg-black/10 hover:text-black transition-colors">
+      <NuxtLink  to="/" class="inline-flex items-center justify-center h-10 px-4 rounded-full text-heading hover:bg-black/10 hover:text-black transition-colors">
         <span class="self-center text-xl text-heading font-semibold whitespace-nowrap">sennecx</span>
-      </RouterLink>
+      </NuxtLink>
 
       <!-- Desktop Menu -->
       <ul class="hidden md:flex flex-1 justify-center items-center space-x-8 font-medium">
-        <li><RouterLink to="/" class="inline-flex items-center justify-center h-10 px-4 rounded-full text-heading hover:bg-black/10 hover:text-black transition-colors">Home</RouterLink></li>
-        <li><RouterLink to="/blogs" class="inline-flex items-center justify-center h-10 px-4 rounded-full text-heading hover:bg-black/10 hover:text-black transition-colors">Blogs</RouterLink></li>
-        <li><RouterLink to="/internship" class="inline-flex items-center justify-center h-10 px-4 rounded-full text-heading hover:bg-black/10 hover:text-black transition-colors">Internship</RouterLink></li>
+        <li><NuxtLink  to="/" class="inline-flex items-center justify-center h-10 px-4 rounded-full text-heading hover:bg-black/10 hover:text-black transition-colors">Home</NuxtLink></li>
+        <li><NuxtLink  to="/blogs" class="inline-flex items-center justify-center h-10 px-4 rounded-full text-heading hover:bg-black/10 hover:text-black transition-colors">Blogs</NuxtLink></li>
+        <li><NuxtLink  to="/internship" class="inline-flex items-center justify-center h-10 px-4 rounded-full text-heading hover:bg-black/10 hover:text-black transition-colors">Internship</NuxtLink></li>
       </ul>
 
       <!-- Desktop Profile Icon -->
-      <RouterLink to="/profile" class="hidden md:flex items-center justify-center w-10 h-10 rounded-full text-heading hover:text-black hover:bg-black/10 transition-colors">
+      <NuxtLink  to="/profile" class="hidden md:flex items-center justify-center w-10 h-10 rounded-full text-heading hover:text-black hover:bg-black/10 transition-colors">
         <UserIcon class="w-6 h-6"/>
-      </RouterLink>
+      </NuxtLink>
 
       <!-- Mobile Hamburger + Profile -->
       <div class="flex md:hidden items-center gap-2">
@@ -32,9 +32,9 @@ const isOpen = ref(false)
           <Bars3Icon v-if="!isOpen" class="w-6 h-6"/>
           <XMarkIcon v-else class="w-6 h-6"/>
         </button>
-        <RouterLink to="/profile" class="flex items-center justify-center w-10 h-10 rounded-full text-heading hover:text-black hover:bg-black/10 transition-colors">
+        <NuxtLink  to="/profile" class="flex items-center justify-center w-10 h-10 rounded-full text-heading hover:text-black hover:bg-black/10 transition-colors">
           <UserIcon class="w-6 h-6"/>
-        </RouterLink>
+        </NuxtLink>
       </div>
     </div>
   </nav>
@@ -54,19 +54,19 @@ const isOpen = ref(false)
     >
       <ul class="flex flex-col items-center gap-2 p-4 font-medium">
         <li>
-          <RouterLink @click="isOpen = false" to="/" class="w-full max-w-xs inline-flex items-center justify-center h-11 px-4 rounded-full text-heading hover:text-black hover:bg-black/10 transition-colors">
+          <NuxtLink  @click="isOpen = false" to="/" class="w-full max-w-xs inline-flex items-center justify-center h-11 px-4 rounded-full text-heading hover:text-black hover:bg-black/10 transition-colors">
             Home
-          </RouterLink>
+          </NuxtLink>
         </li>
         <li>
-          <RouterLink @click="isOpen = false" to="/blogs" class="w-full max-w-xs inline-flex items-center justify-center h-11 px-4 rounded-full text-heading hover:text-black hover:bg-black/10 transition-colors">
+          <NuxtLink  @click="isOpen = false" to="/blogs" class="w-full max-w-xs inline-flex items-center justify-center h-11 px-4 rounded-full text-heading hover:text-black hover:bg-black/10 transition-colors">
             Blogs
-          </RouterLink>
+          </NuxtLink>
         </li>
         <li>
-          <RouterLink @click="isOpen = false" to="/internship" class="w-full max-w-xs inline-flex items-center justify-center h-11 px-4 rounded-full text-heading hover:text-black hover:bg-black/10 transition-colors">
+          <NuxtLink  @click="isOpen = false" to="/internship" class="w-full max-w-xs inline-flex items-center justify-center h-11 px-4 rounded-full text-heading hover:text-black hover:bg-black/10 transition-colors">
             Internship
-          </RouterLink>
+          </NuxtLink>
         </li>
       </ul>
     </div>
