@@ -1,4 +1,4 @@
-import { MongoClient, Collection, Db } from "mongodb";
+import { MongoClient, Db } from "mongodb";
 import type { User, BlogPost, Comment, Tag } from "../interfaces/blog";
 
 
@@ -20,7 +20,7 @@ export async function connectdb(): Promise<Db> {
     cachedClient = client;
     cachedDb = client.db(DB_NAME);
 
-    console.log("✅ Connected to MongoDB");
+    console.log("Connected to MongoDB");
 
     process.on("SIGINT", async () => {
       if (cachedClient) {
