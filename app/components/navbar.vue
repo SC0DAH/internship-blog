@@ -17,7 +17,7 @@ const handleLogout = async () => {
 </script>
 
 <template>
-  <nav class="bg-neutral-primary fixed w-full z-20 top-0 start-0 border-b border-default">
+  <nav class="bg-neutral-primary fixed w-full z-20 top-0 start-0 border-b border-default backdrop-blur-sm">
     <div class="max-w-screen-xl flex items-center justify-between mx-auto p-4">
       
       <NuxtLink  to="/" class="inline-flex items-center justify-center h-10 px-4 rounded-full text-heading hover:bg-black/10 hover:text-black transition-colors">
@@ -35,7 +35,7 @@ const handleLogout = async () => {
         <UserIcon class="w-6 h-6"/>
       </NuxtLink>
       <button v-if="user" @click="handleLogout"
-          class="flex items-center justify-center w-10 h-10 rounded-full text-heading hover:text-black hover:bg-black/10 transition-colors">
+          class="hidden md:flex items-center justify-center w-10 h-10 rounded-full text-heading hover:text-black hover:bg-black/10 transition-colors">
           <ArrowLeftStartOnRectangleIcon class="w-6 h-6"/>
       </button>
 
