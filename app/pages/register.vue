@@ -78,6 +78,8 @@ const error = ref("");
 const success = ref("");
 const loading = ref(false);
 
+const router = useRouter();
+
 const { registerUser } = useAuth();
 
 async function handleRegister() {
@@ -87,21 +89,24 @@ async function handleRegister() {
   if (!name.value || !email.value || !password.value) {
     error.value = "Vul alle velden in.";
     return;
+  } else if (name.value.trim().length < 3) {
+    error.value = "Naam moet minstens 3 tekens bevatten.";
+    return;
   }
 
   try {
     loading.value = true;
-    console.log("Register start");
     const res = await registerUser(name.value, email.value, password.value);
-    console.log("Register end");
     success.value = res.message;
 
     // reset form
     name.value = "";
     email.value = "";
     password.value = "";
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    router.push("/login");
   } catch (err: any) {
-    error.value = err?.message || "Er ging iets mis bij registreren.";
+    error.value = err?.message || "Er ging iets mis bij het registreren.";
   } finally {
     loading.value = false;
   }

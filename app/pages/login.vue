@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useAuth } from "~~/composables/useAuth"; // jouw Firebase composable
+import { useAuth } from "~~/composables/useAuth";
 
 const email = ref("");
 const password = ref("");
@@ -84,7 +84,11 @@ async function handleLogin() {
       error.value = "Gebruiker niet gevonden.";
     } else if (err.code === "auth/wrong-password") {
       error.value = "Wachtwoord incorrect.";
-    } else {
+    } else if (err.code === "auth/invalid-email") {
+      error.value = "Ongeldig emailadres.";
+    }
+    else {
+      console.error("Login error:", err.message);
       error.value = err?.message || "Er ging iets mis bij login.";
     }
   } finally {

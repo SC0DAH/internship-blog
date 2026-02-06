@@ -12,25 +12,25 @@ export const useAuth = () => {
 
   const registerUser = async (name: string, email: string, password: string) => {
     try {
-      console.log("Registering user in Firebase", email);
       const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-      console.log("Firebase auth returned", userCredential.user.uid);
       const user = userCredential.user
-      console.log("Stroing user in firestore");
       await setDoc(doc(db, 'users', user.uid), {
         name,
         email,
         role: 'user',
         createdAt: serverTimestamp()
       })
-      console.log("User stored in Firestore");
       return {
         message: 'User registered successfully',
         userId: user.uid
       }
     } catch (error: any) {
       if (error.code === 'auth/email-already-in-use') {
-        throw new Error('Email already registered')
+        throw new Error('Email is al in gebruik')
+      } else if (error.code === 'auth/invalid-email') {
+        throw new Error('Ongeldig emailadres')
+      } else if (error.code === 'auth/weak-password') {
+        throw new Error('Wachtwoord moet minstens 6 tekens bevatten')
       }
       throw error
     }
