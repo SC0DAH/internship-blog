@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
+import { getAuth, type Auth } from 'firebase/auth'
+import { getFirestore, type Firestore } from 'firebase/firestore'
 
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig()
@@ -26,3 +26,20 @@ export default defineNuxtPlugin(() => {
     }
   }
 })
+
+// Type augmentation for better TypeScript support
+declare module '#app' {
+  interface NuxtApp {
+    $auth: Auth
+    $db: Firestore
+  }
+}
+
+declare module 'vue' {
+  interface ComponentCustomProperties {
+    $auth: Auth
+    $db: Firestore
+  }
+}
+
+export {}

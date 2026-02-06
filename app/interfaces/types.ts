@@ -1,7 +1,7 @@
 import type { Timestamp } from "firebase/firestore"
 
 export interface Author {
-  uid: string
+  id: string
   name: string
   avatar?: string
 }
@@ -16,7 +16,6 @@ export interface Comment {
 }
 
 export interface Tag {
-  id?: string
   name: string
 }
 
@@ -26,9 +25,9 @@ export interface BlogPost {
   content: string
   author: Author
   tags?: Tag[]
-  publishedAt?: Timestamp
-  updatedAt?: Timestamp
-  views?: number
+  createdAt: Date
+  updatedAt: Date
+  views: number
 }
 
 export interface User {
