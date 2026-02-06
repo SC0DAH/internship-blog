@@ -103,7 +103,6 @@ async function handleRegister() {
     name.value = "";
     email.value = "";
     password.value = "";
-    await new Promise((resolve) => setTimeout(resolve, 800));
     router.push("/login");
   } catch (err: any) {
     error.value = err?.message || "Er ging iets mis bij het registreren.";
