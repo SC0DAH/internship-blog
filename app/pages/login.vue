@@ -1,9 +1,13 @@
 <template>
-  <section class="flex items-center justify-center bg-gray-50" :style="{ minHeight: 'calc(100vh - 5rem)' }">
+  <section
+    class="flex items-center justify-center bg-gray-50"
+    :style="{ minHeight: 'calc(100vh - 5rem)' }"
+  >
     <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
       <h1 class="text-3xl font-bold text-heading mb-6 text-center">Login</h1>
 
       <form @submit.prevent="handleLogin" class="space-y-4">
+        <!-- Email -->
         <div>
           <label class="block text-sm font-medium text-neutral-700 mb-1">Email</label>
           <input
@@ -14,6 +18,7 @@
           />
         </div>
 
+        <!-- Password -->
         <div>
           <label class="block text-sm font-medium text-neutral-700 mb-1">Password</label>
           <input
@@ -24,11 +29,16 @@
           />
         </div>
 
+        <!-- Error message -->
+        <p v-if="error" class="text-sm text-red-600">{{ error }}</p>
+
+        <!-- Submit -->
         <button
           type="submit"
-          class="w-full bg-neutral-950 text-white py-2 rounded-lg hover:bg-gray-700 transition-colors font-semibold"
+          :disabled="loading"
+          class="w-full bg-neutral-950 text-white py-2 rounded-lg hover:bg-gray-700 transition-colors font-semibold disabled:opacity-50"
         >
-          Login
+          {{ loading ? "Logging in..." : "Login" }}
         </button>
       </form>
 
@@ -41,13 +51,44 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useAuth } from "~~/composables/useAuth"; // jouw Firebase composable
 
-const email = ref('')
-const password = ref('')
+const email = ref("");
+const password = ref("");
+const error = ref("");
+const loading = ref(false);
+
+const router = useRouter();
+const { loginUser } = useAuth();
 
 async function handleLogin() {
-  console.log('Login attempt:', email.value, password.value)
-  // TODO: API call naar /api/login
+  error.value = "";
+  loading.value = true;
+
+  if (!email.value || !password.value) {
+    error.value = "Vul zowel email als wachtwoord in.";
+    loading.value = false;
+    return;
+  }
+
+  try {
+    const user = await loginUser(email.value, password.value);
+    console.log("User logged in:", user.uid);
+
+    router.push("/");
+  } catch (err: any) {
+    console.error(err);
+    if (err.code === "auth/user-not-found") {
+      error.value = "Gebruiker niet gevonden.";
+    } else if (err.code === "auth/wrong-password") {
+      error.value = "Wachtwoord incorrect.";
+    } else {
+      error.value = err?.message || "Er ging iets mis bij login.";
+    }
+  } finally {
+    loading.value = false;
+  }
 }
 </script>
