@@ -1,5 +1,5 @@
 import { updateProfile, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth'
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
 import type { Auth } from 'firebase/auth'
 import type { Firestore } from 'firebase/firestore'
 
@@ -54,11 +54,26 @@ export const useAuth = () => {
     await signOut(auth)
   }
 
+  const getUserRole = async (): Promise<"admin" | "user" | null> => {
+    if(!$auth.currentUser) return null;
+
+    const docRef = doc($db, 'users', $auth.currentUser.uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data() as { role: string };
+      return data.role === "admin" ? "admin" : "user";
+    }
+
+    return null;
+  }
+
   return {
     user,
     loading,
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    getUserRole
   }
 }

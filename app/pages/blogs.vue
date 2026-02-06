@@ -1,8 +1,9 @@
 <script setup lang="ts">
-definePageMeta({ ssr: false })
 import { ref, onMounted } from "vue";
 import { useBlog } from "~~/composables/useBlog";
 import type { BlogPost } from "~/interfaces/types";
+import { useAuth } from '~~/composables/useAuth'
+import { TrashIcon} from '@heroicons/vue/24/outline'
 
 const blogs = ref<BlogPost[]>([]);
 const title = ref("");
@@ -11,13 +12,19 @@ const tags = ref("");
 const { getAllBlogsRealtime, createBlog } = useBlog();
 
 const { $auth } = useNuxtApp();
+const { getUserRole } = useAuth();
+const role = ref<"user" | "admin" | null>(null);
 
 let unsubscribe: (() => void) | null = null;
 
-onMounted(() => {
+onMounted(async () => {
   unsubscribe = getAllBlogsRealtime((data) => {
     blogs.value = data;
   });
+
+  if ($auth.currentUser) {
+    role.value = await getUserRole();
+  }
 });
 
 onBeforeUnmount(() => {
@@ -63,7 +70,7 @@ const submitBlog = async () => {
 </script>
 
 <template>
-  <div class="max-w-2xl mx-auto p-4">
+  <div class="max-w-2xl mx-auto p-4" v-if="role === 'admin'">
     <h1 class="text-3xl font-bold mb-6 text-center">Nieuwe Blog</h1>
     
     <form @submit.prevent="submitBlog" class="flex flex-col gap-4">
@@ -101,8 +108,9 @@ const submitBlog = async () => {
   
   <div class="max-w-2xl mx-auto p-4 mt-12">
     <h1 class="text-3xl font-bold mb-6 text-center">Alle Blogs</h1>
-
+    <p v-if="blogs.length === 0" class="text-center text-gray-600 mb-8">Er zijn nog geen blogs beschikbaar.</p>
     <div
+      v-else
       v-for="blog in blogs"
       :key="blog.id"
       class="border p-4 mb-4 rounded-2xl shadow-sm hover:shadow-md transition"
