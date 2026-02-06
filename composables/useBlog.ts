@@ -1,5 +1,6 @@
-import { collection, doc, addDoc, updateDoc, onSnapshot, query, orderBy, increment, getDoc, type Unsubscribe } from "firebase/firestore";
+import { collection, doc, addDoc, updateDoc, onSnapshot, query, orderBy, increment, getDoc, deleteDoc, type Unsubscribe } from "firebase/firestore";
 import type { BlogPost } from "~/interfaces/types";
+import { useAuth } from "./useAuth";
 
 export function useBlog() {
   const getDb = () => {
@@ -85,6 +86,24 @@ export function useBlog() {
     }
   };
 
+  const deleteBlog = async (id: string) => {
+    try {
+      const db = getDb();
+      const docRef = doc(db, "blogs", id);
+
+      await deleteDoc(docRef);
+      
+    } catch (error: any) {
+      console.error("Error deleting blog:", error);
+      
+      if (error?.code === 'permission-denied') {
+        throw new Error('Je hebt geen toestemming om deze blog te verwijderen. Alleen admins kunnen blogs verwijderen.');
+      }
+      
+      throw error;
+    }
+  };
+
   const incrementViews = async (id: string) => {
     try {
       const db = getDb();
@@ -96,5 +115,5 @@ export function useBlog() {
     }
   };
 
-  return { getAllBlogsRealtime, getBlog, createBlog, updateBlog, incrementViews };
+  return { getAllBlogsRealtime, getBlog, createBlog, updateBlog, incrementViews, deleteBlog };
 }

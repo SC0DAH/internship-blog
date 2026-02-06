@@ -35,7 +35,8 @@ const handleLogout = async () => {
         <UserIcon class="w-6 h-6"/>
       </NuxtLink>
       <button v-if="user" @click="handleLogout"
-          class="hidden md:flex items-center justify-center w-10 h-10 rounded-full text-heading hover:text-black hover:bg-black/10 transition-colors">
+          class="hidden md:flex items-center justify-center w-10 h-10 rounded-full text-heading hover:text-black hover:bg-black/10 transition-colors"
+          title="logout">
           <ArrowLeftStartOnRectangleIcon class="w-6 h-6"/>
       </button>
 
