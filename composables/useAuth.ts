@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth'
+import { updateProfile, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth'
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import type { Auth } from 'firebase/auth'
 import type { Firestore } from 'firebase/firestore'
@@ -23,6 +23,7 @@ export const useAuth = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password)
       const user = userCredential.user
+      await updateProfile(user, { displayName: name })
       await setDoc(doc(db, 'users', user.uid), {
         name,
         email,
