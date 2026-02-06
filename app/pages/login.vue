@@ -74,8 +74,7 @@ async function handleLogin() {
   }
 
   try {
-    const user = await loginUser(email.value, password.value);
-    console.log("User logged in:", user.uid);
+    await loginUser(email.value, password.value);
 
     router.push("/");
   } catch (err: any) {

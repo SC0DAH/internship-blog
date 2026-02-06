@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth'
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import type { Auth } from 'firebase/auth'
 import type { Firestore } from 'firebase/firestore'
@@ -6,9 +6,18 @@ import type { Firestore } from 'firebase/firestore'
 export const useAuth = () => {
   const { $auth, $db } = useNuxtApp()
 
-  // Type assertions
   const auth = $auth as Auth
   const db = $db as Firestore
+
+  const user = useState<FirebaseUser | null>('auth_user', () => null)
+  const loading = useState<boolean>('auth_loading', () => true)
+
+  if (process.client && loading.value) {
+    onAuthStateChanged(auth, (firebaseUser) => {
+      user.value = firebaseUser
+      loading.value = false
+    })
+  }
 
   const registerUser = async (name: string, email: string, password: string) => {
     try {
@@ -37,8 +46,7 @@ export const useAuth = () => {
   }
 
   const loginUser = async (email: string, password: string) => {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password)
-    return userCredential.user
+    await signInWithEmailAndPassword(auth, email, password) // zet de authState automatisch
   }
 
   const logoutUser = async () => {
@@ -46,6 +54,8 @@ export const useAuth = () => {
   }
 
   return {
+    user,
+    loading,
     registerUser,
     loginUser,
     logoutUser

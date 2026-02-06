@@ -32,7 +32,7 @@ export interface BlogPost {
 }
 
 export interface User {
-  uid: string         // Firebase Auth UID
+  uid: string
   name: string
   email: string
   role: 'user' | 'admin'
