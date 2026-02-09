@@ -32,7 +32,7 @@ const {data : latestBlog, pending} = useAsyncData<BlogPost | null>("latest-blog"
         <p class="text-blue-600 hover:underline font-medium">Lees meer</p>
       </NuxtLink>
 
-      <p v-else class="text-center text-neutral-500">
+      <p v-else-if="pending" class="text-center text-neutral-500">
         Geen blog beschikbaar
       </p>
     </div>
