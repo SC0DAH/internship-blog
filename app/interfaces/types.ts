@@ -6,11 +6,11 @@ export interface Author {
   avatar?: string
 }
 
-export interface Comment {
+export interface BlogComment {
   id?: string
   postId: string
-  authorUid: string
-  authorName: string
+  commenterUid: string
+  commenterDisplayName: string
   content: string
   createdAt: Timestamp
 }
