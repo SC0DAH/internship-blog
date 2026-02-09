@@ -15,6 +15,7 @@ const { user, loading: authLoading } = useAuth();
 const { getUserRole } = useAuth();
 const role = ref<"user" | "admin" | null>(null);
 const selectedTag = ref<string>(""); // tags filteren
+const loading = ref(true);
 
 let unsubscribe: (() => void) | null = null;
 
@@ -34,6 +35,7 @@ const filteredBlogs = computed(() => {
 onMounted(async () => {
   unsubscribe = getAllBlogsRealtime((data) => {
     blogs.value = data;
+    loading.value = false;
   });
 });
 
@@ -136,8 +138,8 @@ const handleDeleteBlog = async (blogId: string) => {
         </div>
       </div>
 
-      <template v-if="blogs.length === 0">
-        <div v-for="i in 3" :key="i" class="border p-4 mb-4 rounded-2xl shadow-sm animate-pulse space-y-3">
+      <template v-if="loading">
+        <div v-for="i in filteredBlogs.length + 1" :key="i" class="border p-4 mb-4 rounded-2xl shadow-sm animate-pulse space-y-3">
           <div class="h-6 bg-gray-200 rounded w-3/4"></div>
           <div class="h-4 bg-gray-200 rounded w-full"></div>
           <div class="h-4 bg-gray-200 rounded w-5/6"></div>
