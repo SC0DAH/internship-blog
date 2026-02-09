@@ -11,7 +11,7 @@ import { TrashIcon, ArrowRightIcon, LockClosedIcon } from '@heroicons/vue/24/out
 const route = useRoute();
 const blogId = route.params.id as string;
 
-const { getBlog } = useBlog();
+const { getBlog, incrementViews } = useBlog();
 const { getCommentsRealtime, addComment, deleteComment } = useComments();
 const { user, getUserRole } = useAuth();
 
@@ -27,6 +27,10 @@ onMounted(async () => {
 
   try {
     blog.value = await getBlog(blogId);
+    if (blog.value) {
+      await incrementViews(blogId);
+      blog.value.views = (blog.value.views || 0) + 1;
+    }
   } catch (err) {
     console.error("Blog ophalen mislukt:", err);
   } finally {
