@@ -1,4 +1,4 @@
-import { collection, addDoc, query, orderBy, onSnapshot, Timestamp } from "firebase/firestore";
+import { collection, addDoc, query, orderBy, onSnapshot, Timestamp, doc, deleteDoc } from "firebase/firestore";
 import type { BlogComment } from "~/interfaces/types";
 import { useNuxtApp } from "#app";
 
@@ -30,5 +30,19 @@ export function useComments() {
     });
   };
 
-  return { getCommentsRealtime, addComment };
+  const deleteComment = async (commentId: string) => {
+    try {
+        const db = getDb();
+        const docRef = doc(db, "comments", commentId);
+        await deleteDoc(docRef);
+    } catch (error: any) {
+        console.error("Error deleting comment:", error);
+        if (error?.code === 'permission-denied') {
+            throw new Error('Je hebt geen toestemming om deze comment te verwijderen. Alleen admins kunnen comments verwijderen.');
+        }
+        throw error;
+    }
+  }
+
+  return { getCommentsRealtime, addComment, deleteComment };
 }

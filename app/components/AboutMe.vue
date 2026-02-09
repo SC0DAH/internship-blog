@@ -21,7 +21,7 @@ import meImg from '~/assets/me.webp'
     <div class="flex flex-col items-center mt-6 gap-3">
       <p class="text-gray-600 mb-2 font-medium">Socials</p>
       <div class="flex gap-4">
-        <a href="https://www.linkedin.com/in/je-gebruikersnaam/" target="_blank" rel="noopener noreferrer"
+        <a href="https://www.linkedin.com/in/senne-cockx-394101290/" target="_blank" rel="noopener noreferrer"
            class="flex items-center justify-center w-10 h-10 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition">
           <Linkedin class="w-5 h-5"/>
         </a>

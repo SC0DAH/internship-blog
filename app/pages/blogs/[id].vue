@@ -8,27 +8,23 @@ import { CalendarIcon } from '@heroicons/vue/24/outline';
 import { useAuth } from "~~/composables/useAuth";
 import { TrashIcon, ArrowRightIcon } from '@heroicons/vue/24/outline'
 
-// Route & blogId
 const route = useRoute();
 const blogId = route.params.id as string;
 
-// Composables
 const { getBlog } = useBlog();
-const { getCommentsRealtime, addComment } = useComments();
-const { user } = useAuth();
+const { getCommentsRealtime, addComment, deleteComment } = useComments();
+const { user, getUserRole } = useAuth();
 
-// State
 const blog = ref<BlogPost | null>(null);
 const pending = ref(true);
 const comments = ref<BlogComment[]>([]);
 const newComment = ref("");
+const role = ref<"user" | "admin" | null>(null);
 let unsubscribe: (() => void) | null = null;
 
-// CLIENT-SIDE only: haal blog & comments
 onMounted(async () => {
   if (!process.client) return;
 
-  // Blog ophalen
   try {
     blog.value = await getBlog(blogId);
   } catch (err) {
@@ -37,7 +33,6 @@ onMounted(async () => {
     pending.value = false;
   }
 
-  // Realtime comments
   if (blogId) {
     unsubscribe = getCommentsRealtime(blogId, (data) => {
       comments.value = data;
@@ -45,12 +40,18 @@ onMounted(async () => {
   }
 });
 
-// Clean up
 onBeforeUnmount(() => {
   if (unsubscribe) unsubscribe();
 });
 
-// Submit comment
+watch(user, async (newUser) => {
+  if (newUser) {
+    role.value = await getUserRole();
+  } else {
+    role.value = null;
+  }
+}, { immediate: true });
+
 const submitComment = async () => {
   if (!process.client) return;
   if (!user.value) return alert("Je moet ingelogd zijn om te reageren!");
@@ -69,6 +70,21 @@ const submitComment = async () => {
     alert(err.message || "Er is iets misgegaan bij het toevoegen van de reactie.");
   }
 };
+
+const handleDeleteComment = async (commentId: string) => {
+  if (role.value !== "admin") {
+    return alert("Je hebt geen toestemming om reacties te verwijderen!");
+  }
+
+  if (!confirm("Weet je zeker dat je deze reactie wilt verwijderen?")) return;
+
+  try {
+    await deleteComment(commentId);
+  } catch (err: any) {
+    console.error("Reactie verwijderen mislukt:", err);
+    alert(err.message || "Er ging iets mis bij het verwijderen.");
+  }
+};
 </script>
 
 <template>
@@ -80,7 +96,6 @@ const submitComment = async () => {
       ← terug naar alle blogs
     </NuxtLink>
 
-    <!-- Skeleton / Loading -->
     <div v-if="pending" class="bg-white p-8 rounded-xl shadow-md space-y-6 animate-pulse">
       <div class="h-10 bg-gray-200 rounded w-3/4"></div>
       <div class="flex items-center gap-4">
@@ -101,7 +116,6 @@ const submitComment = async () => {
       </div>
     </div>
 
-    <!-- Blog content -->
     <div v-else-if="blog" class="bg-white p-8 rounded-xl shadow-md space-y-6">
       <h1 class="text-3xl font-bold text-gray-900">{{ blog.title }}</h1>
       <div class="text-sm text-gray-500 flex items-center gap-4">
@@ -123,17 +137,23 @@ const submitComment = async () => {
       Deze blog werd niet gevonden :/.
     </div>
 
-    <!-- Comments -->
     <div class="mt-12">
       <h2 class="text-2xl font-semibold mb-4">Reacties</h2>
       <div v-if="comments.length === 0" class="text-gray-500 mb-4">
         Wees de eerste om te reageren!
       </div>
-      <div v-for="comment in comments" :key="comment.id" class="border p-4 rounded-lg mb-2">
+      <div v-for="comment in comments" :key="comment.id" class="border p-4 rounded-lg mb-2 relative">
         <p class="text-sm text-gray-500">
           {{ comment.commenterDisplayName }} • {{ comment.createdAt.toDate().toLocaleString() }}
         </p>
         <p class="mt-1">{{ comment.content }}</p>
+        <button
+            v-if="role === 'admin'"
+            @click.stop="handleDeleteComment(comment.id!)"
+            class="absolute top-2 right-2 p-1 text-gray-400 hover:text-red-500 transition"
+            title="Verwijder reactie">
+            <TrashIcon class="w-4 h-4" />
+        </button>
       </div>
 
     <div v-if="user" class="mt-4">

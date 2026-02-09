@@ -11,8 +11,7 @@ const content = ref("");
 const tags = ref("");
 const { getAllBlogsRealtime, createBlog, deleteBlog } = useBlog();
 
-const { user, loading: authLoading } = useAuth();
-const { getUserRole } = useAuth();
+const { user, loading: authLoading, getUserRole } = useAuth();
 const role = ref<"user" | "admin" | null>(null);
 const selectedTag = ref<string>(""); // tags filteren
 const loading = ref(true);
