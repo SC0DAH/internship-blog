@@ -16,7 +16,7 @@ import { Github, Linkedin, Instagram } from 'lucide-vue-next'
       />
 
       <p class="text-neutral-700 max-w-xl">
-        Hey! Ik ben Senne Cockx, een {{ new Date().getFullYear() - 2006 - (new Date() < new Date(new Date().getFullYear(), 2, 13) ? 1 : 0) }}-jarige junior developer uit België. Al sinds mijn jeugd wou ik leren programmeren. Sinds het vijfde middelbaar leer ik programmeren. En nu, na het middelbaar doe ik een graduaat programmeren om mijn kennis en vooral praktische vaardigheden verder uit te breiden.
+        Hey! Ik ben Senne Cockx, een {{ new Date().getFullYear() - 2006 - (new Date() < new Date(new Date().getFullYear(), 2, 13) ? 1 : 0) }}-jarige junior developer uit België. Al sinds mijn jeugd wou ik leren programmeren. Uiteindelijk ben ik beginnen programmeren in het vijfde middelbaar. En nu, na het middelbaar doe ik een graduaat programmeren om mijn kennis en vooral praktische vaardigheden verder uit te breiden.
       </p>
     </div>
 

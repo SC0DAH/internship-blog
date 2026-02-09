@@ -1,4 +1,4 @@
-import { collection, doc, addDoc, updateDoc, onSnapshot, query, orderBy, increment, getDoc, deleteDoc, type Unsubscribe } from "firebase/firestore";
+import { collection, doc, addDoc, updateDoc, onSnapshot, query, orderBy, increment, getDoc, getDocs, deleteDoc, limit, type Unsubscribe } from "firebase/firestore";
 import type { BlogPost } from "~/interfaces/types";
 import { useAuth } from "./useAuth";
 
@@ -115,5 +115,33 @@ export function useBlog() {
     }
   };
 
-  return { getAllBlogsRealtime, getBlog, createBlog, updateBlog, incrementViews, deleteBlog };
+  const getLatestBlog = async (): Promise<BlogPost | null> => {
+  try {
+    const db = getDb();
+    const blogsCol = collection(db, "blogs");
+
+    const q = query(blogsCol, orderBy("createdAt", "desc"), limit(1));
+    const snapshot = await getDocs(q);
+
+
+    const docSnap = snapshot.docs[0];
+    if (!docSnap) {
+      return null;
+    }
+    const data = docSnap.data() as any;
+
+      return {
+        id: docSnap.id,
+        ...data,
+        createdAt: data.createdAt?.toDate() || new Date(),
+        updatedAt: data.updatedAt?.toDate() || new Date()
+      } as BlogPost;
+
+  } catch (error) {
+    console.error("Error getting latest blog:", error);
+    return null;
+  }
+    };
+
+  return { getAllBlogsRealtime, getBlog, createBlog, updateBlog, incrementViews, deleteBlog, getLatestBlog };
 }

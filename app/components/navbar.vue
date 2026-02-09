@@ -11,7 +11,7 @@ const handleLogout = async () => {
     await logoutUser();
     router.push('/login');
   } catch (error) {
-    console.error("Logout error:", err)
+    console.error("Logout error:", error)
   }
 }
 </script>
