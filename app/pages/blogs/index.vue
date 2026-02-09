@@ -96,43 +96,27 @@ const handleDeleteBlog = async (blogId: string) => {
       <h1 class="text-3xl font-bold mb-6 text-center">Nieuwe Blog</h1>
       
       <form @submit.prevent="submitBlog" class="flex flex-col gap-4">
-        <input 
-          v-model="title"
-          type="text" 
-          placeholder="Titel" 
-          class="border p-2 rounded"
-          required
-        />
-
-        <textarea 
-          v-model="content" 
-          placeholder="Content" 
-          rows="10"
-          class="border p-2 rounded"
-          required
-        ></textarea>
-
-        <input 
-          v-model="tags"
-          type="text" 
-          placeholder="Tags (gescheiden door komma)" 
-          class="border p-2 rounded"
-        />
-
-        <button 
-          type="submit"
-          class="bg-gray-800 text-white p-2 rounded hover:bg-gray-600"
-        >
+        <input v-model="title" type="text" placeholder="Titel" class="border p-2 rounded" required />
+        <textarea v-model="content" placeholder="Content" rows="10" class="border p-2 rounded" required></textarea>
+        <input v-model="tags" type="text" placeholder="Tags (gescheiden door komma)" class="border p-2 rounded" />
+        <button type="submit" class="bg-gray-800 text-white p-2 rounded hover:bg-gray-600">
           Post Blog
         </button>
       </form>
     </div>
-    
+
     <div class="max-w-2xl mx-auto p-4 mt-12">
       <h1 class="text-3xl font-bold mb-6 text-center">Alle Blogs</h1>
-      <p v-if="blogs.length === 0" class="text-center text-gray-600 mb-8">
-        Er zijn nog geen blogs beschikbaar.
-      </p>
+
+      <template v-if="blogs.length === 0">
+        <div v-for="i in blogs.length + 1" :key="i" class="border p-4 mb-4 rounded-2xl shadow-sm animate-pulse space-y-3">
+          <div class="h-6 bg-gray-200 rounded w-3/4"></div>
+          <div class="h-4 bg-gray-200 rounded w-full"></div>
+          <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+          <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+        </div>
+      </template>
+
       <div
         v-else
         v-for="blog in blogs"
