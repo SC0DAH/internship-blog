@@ -1,7 +1,5 @@
 <template>
-  <!-- Volledige breedte voor de grijze achtergrond -->
   <section class="bg-gray-100 py-12">
-    <!-- Card gecentreerd en met max-width -->
     <div class="max-w-screen-md mx-auto px-4">
       <h2 class="text-2xl font-semibold text-heading mb-6 text-center">Laatste Blog</h2>
       <NuxtLink to="/blogs" class="block bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">

@@ -11,7 +11,6 @@ const content = ref("");
 const tags = ref("");
 const { getAllBlogsRealtime, createBlog, deleteBlog } = useBlog();
 
-// Gebruik useFirebaseAuth om auth state te volgen
 const { user, loading: authLoading } = useAuth();
 const { getUserRole } = useAuth();
 const role = ref<"user" | "admin" | null>(null);
@@ -24,7 +23,6 @@ onMounted(async () => {
   });
 });
 
-// Watch voor wanneer user wordt ingeladen
 watch(user, async (newUser) => {
   if (newUser) {
     role.value = await getUserRole();
@@ -89,13 +87,11 @@ const handleDeleteBlog = async (blogId: string) => {
 </script>
 
 <template>
-  <!-- Loading state terwijl auth wordt gecontroleerd -->
   <div v-if="authLoading" class="max-w-2xl mx-auto p-4 text-center">
     <p class="text-gray-600">Laden...</p>
   </div>
 
   <div v-else>
-    <!-- Admin form - alleen zichtbaar voor admins -->
     <div class="max-w-2xl mx-auto p-4" v-if="role === 'admin'">
       <h1 class="text-3xl font-bold mb-6 text-center">Nieuwe Blog</h1>
       
@@ -132,7 +128,6 @@ const handleDeleteBlog = async (blogId: string) => {
       </form>
     </div>
     
-    <!-- Blogs lijst -->
     <div class="max-w-2xl mx-auto p-4 mt-12">
       <h1 class="text-3xl font-bold mb-6 text-center">Alle Blogs</h1>
       <p v-if="blogs.length === 0" class="text-center text-gray-600 mb-8">
@@ -160,7 +155,6 @@ const handleDeleteBlog = async (blogId: string) => {
           </p>
         </NuxtLink>
 
-        <!-- Delete button - alleen zichtbaar voor admins -->
         <button 
           v-if="role === 'admin'"
           @click.stop="handleDeleteBlog(blog.id!)"
