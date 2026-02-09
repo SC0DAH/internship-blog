@@ -6,7 +6,7 @@ import { useComments } from "~~/composables/useComments";
 import type { BlogComment, BlogPost } from "~/interfaces/types";
 import { CalendarIcon } from '@heroicons/vue/24/outline';
 import { useAuth } from "~~/composables/useAuth";
-import { TrashIcon, ArrowRightIcon } from '@heroicons/vue/24/outline'
+import { TrashIcon, ArrowRightIcon, LockClosedIcon } from '@heroicons/vue/24/outline'
 
 const route = useRoute();
 const blogId = route.params.id as string;
@@ -156,28 +156,32 @@ const handleDeleteComment = async (commentId: string) => {
         </button>
       </div>
 
-    <div v-if="user" class="mt-4">
-        <div class="relative">
-            <textarea
-            v-model="newComment"
-            @keydown.enter.exact.prevent="submitComment"
-            placeholder="Schrijf een reactie..."
-            rows="1"
-            class="w-full border p-3 pr-24 rounded resize-none"
-            ></textarea>
+    <div class="mt-4">
+  <div class="relative">
+    <textarea
+      v-model="newComment"
+      :placeholder="user ? 'Schrijf een reactie...' : 'Je moet ingelogd zijn om een comment te kunnen plaatsen'"
+      :disabled="!user"
+      @keydown.enter.exact.prevent="submitComment"
+      rows="1"
+      class="w-full border p-3 pr-24 rounded resize-none bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-400"
+    ></textarea>
 
-            <button
-            @click="submitComment"
-            class="absolute top-1/2 right-2 -translate-y-1/2 bg-gray-800 text-white px-3 py-1 rounded hover:bg-gray-600 text-sm"
-            >
-            <ArrowRightIcon class="w-4 h-4"/>
-            </button>
-        </div>
-    </div>
+    <button
+      @click="submitComment"
+      :disabled="!user"
+      class="absolute top-1/2 right-2 -translate-y-[55%] bg-gray-800 text-white px-3 py-1 rounded hover:bg-gray-600 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <template v-if="user">
+        <ArrowRightIcon class="w-4 h-4"/>
+      </template>
+      <template v-else>
+        <LockClosedIcon class="w-4 h-4"/>
+      </template>
+    </button>
+  </div>
+</div>
 
-      <div v-else class="text-gray-500 mt-4">
-        Je moet ingelogd zijn om te reageren.
-      </div>
     </div>
   </div>
 </section>
