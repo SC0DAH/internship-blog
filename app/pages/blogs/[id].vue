@@ -140,6 +140,7 @@ const submitComment = async () => {
         <div class="relative">
             <textarea
             v-model="newComment"
+            @keydown.enter.exact.prevent="submitComment"
             placeholder="Schrijf een reactie..."
             rows="1"
             class="w-full border p-3 pr-24 rounded resize-none"
