@@ -7,7 +7,6 @@
       <h1 class="text-3xl font-bold text-heading mb-6 text-center">Login</h1>
 
       <form @submit.prevent="handleLogin" class="space-y-4">
-        <!-- Email -->
         <div>
           <label class="block text-sm font-medium text-neutral-700 mb-1">Email</label>
           <input
@@ -17,22 +16,31 @@
             class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-gray-400 focus:outline-none"
           />
         </div>
-
-        <!-- Password -->
         <div>
           <label class="block text-sm font-medium text-neutral-700 mb-1">Password</label>
-          <input
-            v-model="password"
-            type="password"
-            placeholder="••••••••"
-            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-gray-400 focus:outline-none"
-          />
-        </div>
+            <div class="relative flex items-center">
+              <input
+                v-model="password"
+                :type="showPassword ? 'text' : 'password'"
+                placeholder="••••••••"
+                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-gray-400 focus:outline-none pr-10"
+              />
 
-        <!-- Error message -->
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="absolute right-3 flex items-center justify-center h-full text-gray-400 hover:text-gray-700 focus:outline-none"
+              >
+                <EyeIcon v-if="!showPassword" class="w-5 h-5" />
+                <EyeSlashIcon v-else class="w-5 h-5" />
+              </button>
+            </div>
+        </div>
+        
+        
+
         <p v-if="error" class="text-sm text-red-600">{{ error }}</p>
 
-        <!-- Submit -->
         <button
           type="submit"
           :disabled="loading"
@@ -54,11 +62,13 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuth } from "~~/composables/useAuth";
+import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
 
 const email = ref("");
 const password = ref("");
 const error = ref("");
 const loading = ref(false);
+const showPassword = ref(false);
 
 const router = useRouter();
 const { loginUser } = useAuth();

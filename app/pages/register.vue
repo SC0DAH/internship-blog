@@ -7,7 +7,7 @@
       <h1 class="text-3xl font-bold text-heading mb-6 text-center">Register</h1>
 
       <form @submit.prevent="handleRegister" class="space-y-4">
-        <!-- Naam -->
+
         <div>
           <label class="block text-sm font-medium text-neutral-700 mb-1">Naam</label>
           <input
@@ -18,7 +18,6 @@
           />
         </div>
 
-        <!-- Email -->
         <div>
           <label class="block text-sm font-medium text-neutral-700 mb-1">Email</label>
           <input
@@ -29,24 +28,31 @@
           />
         </div>
 
-        <!-- Password -->
         <div>
           <label class="block text-sm font-medium text-neutral-700 mb-1">Password</label>
-          <input
-            v-model="password"
-            type="password"
-            placeholder="••••••••"
-            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-gray-400 focus:outline-none"
-          />
+          <div class="relative flex items-center">
+              <input
+                v-model="password"
+                :type="showPassword ? 'text' : 'password'"
+                placeholder="••••••••"
+                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-gray-400 focus:outline-none pr-10"
+              />
+
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="absolute right-3 flex items-center justify-center h-full text-gray-400 hover:text-gray-700 focus:outline-none"
+              >
+                <EyeIcon v-if="!showPassword" class="w-5 h-5" />
+                <EyeSlashIcon v-else class="w-5 h-5" />
+              </button>
+            </div>
         </div>
 
-        <!-- Error message -->
         <p v-if="error" class="text-sm text-red-600">{{ error }}</p>
 
-        <!-- Success message -->
         <p v-if="success" class="text-sm text-green-600">{{ success }}</p>
 
-        <!-- Submit -->
         <button
           type="submit"
           :disabled="loading"
@@ -69,10 +75,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useAuth } from "~~/composables/useAuth";
+import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
 
 const name = ref("");
 const email = ref("");
 const password = ref("");
+const showPassword = ref(false);
 
 const error = ref("");
 const success = ref("");
