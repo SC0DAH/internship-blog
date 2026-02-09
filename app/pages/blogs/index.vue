@@ -14,8 +14,22 @@ const { getAllBlogsRealtime, createBlog, deleteBlog } = useBlog();
 const { user, loading: authLoading } = useAuth();
 const { getUserRole } = useAuth();
 const role = ref<"user" | "admin" | null>(null);
+const selectedTag = ref<string>(""); // tags filteren
 
 let unsubscribe: (() => void) | null = null;
+
+const allTags = computed(() => {
+  const tagsSet = new Set<string>();
+  blogs.value.forEach(blog => {
+    blog.tags?.forEach(tag => tagsSet.add(tag.name));
+  });
+  return Array.from(tagsSet);
+}); 
+
+const filteredBlogs = computed(() => {
+  if (!selectedTag.value) return blogs.value;
+  return blogs.value.filter(blog => blog.tags?.some(tag => tag.name === selectedTag.value));
+});
 
 onMounted(async () => {
   unsubscribe = getAllBlogsRealtime((data) => {
@@ -106,10 +120,24 @@ const handleDeleteBlog = async (blogId: string) => {
     </div>
 
     <div class="max-w-2xl mx-auto p-4 mt-12">
-      <h1 class="text-3xl font-bold mb-6 text-center">Alle Blogs</h1>
+      <div class="flex items-center justify-between mb-6 gap-4">
+        <h1 class="text-3xl font-bold">
+          Alle Blogs
+        </h1>
+        <div class="flex items-center gap-2">
+          <label for="tag-filter" class="font-medium">Filter op tag:</label>
+          <select
+            id="tag-filter"
+            v-model="selectedTag"
+            class="border p-1 rounded">
+            <option value="">Alle</option>
+            <option v-for="tag in allTags" :key="tag" :value="tag">{{ tag }}</option>
+          </select>
+        </div>
+      </div>
 
       <template v-if="blogs.length === 0">
-        <div v-for="i in blogs.length + 1" :key="i" class="border p-4 mb-4 rounded-2xl shadow-sm animate-pulse space-y-3">
+        <div v-for="i in 3" :key="i" class="border p-4 mb-4 rounded-2xl shadow-sm animate-pulse space-y-3">
           <div class="h-6 bg-gray-200 rounded w-3/4"></div>
           <div class="h-4 bg-gray-200 rounded w-full"></div>
           <div class="h-4 bg-gray-200 rounded w-5/6"></div>
@@ -117,12 +145,15 @@ const handleDeleteBlog = async (blogId: string) => {
         </div>
       </template>
 
+      <div v-else-if="filteredBlogs.length === 0" class="text-center text-gray-500">
+        Geen blogs beschikbaar.
+      </div>
+
       <div
         v-else
-        v-for="blog in blogs"
+        v-for="blog in filteredBlogs"
         :key="blog.id"
-        class="border p-4 mb-4 rounded-2xl shadow-sm hover:shadow-md transition relative group"
-      >
+        class="border p-4 mb-4 rounded-2xl shadow-sm hover:shadow-md transition relative group">
         <NuxtLink :to="`/blogs/${blog.id}`">
           <h2 class="text-xl font-semibold">{{ blog.title }}</h2>
 
@@ -131,7 +162,7 @@ const handleDeleteBlog = async (blogId: string) => {
           </p>
 
           <p class="text-gray-500 text-sm mt-3">
-            door {{ blog.author.name }} | {{ blog.createdAt?.toLocaleDateString() }}
+            {{ blog.author.name }} | {{ blog.createdAt?.toLocaleDateString() }}
           </p>
 
           <p class="text-gray-400 text-sm mt-1" v-if="blog.tags?.length">
@@ -143,8 +174,7 @@ const handleDeleteBlog = async (blogId: string) => {
           v-if="role === 'admin'"
           @click.stop="handleDeleteBlog(blog.id!)"
           class="absolute top-4 right-4 p-2 text-gray-400 hover:text-red-500 transition-colors"
-          title="Verwijder blog"
-        >
+          title="Verwijder blog">
           <TrashIcon class="w-5 h-5" />
         </button>
       </div>
