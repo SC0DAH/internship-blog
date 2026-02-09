@@ -72,10 +72,6 @@ const submitComment = async () => {
 };
 
 const handleDeleteComment = async (commentId: string) => {
-  if (role.value !== "admin") {
-    return alert("Je hebt geen toestemming om reacties te verwijderen!");
-  }
-
   if (!confirm("Weet je zeker dat je deze reactie wilt verwijderen?")) return;
 
   try {
@@ -148,7 +144,7 @@ const handleDeleteComment = async (commentId: string) => {
         </p>
         <p class="mt-1">{{ comment.content }}</p>
         <button
-            v-if="role === 'admin'"
+            v-if="role === 'admin' || comment.commenterUid === user?.uid"
             @click.stop="handleDeleteComment(comment.id!)"
             class="absolute top-2 right-2 p-1 text-gray-400 hover:text-red-500 transition"
             title="Verwijder reactie">

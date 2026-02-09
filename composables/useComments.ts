@@ -38,7 +38,7 @@ export function useComments() {
     } catch (error: any) {
         console.error("Error deleting comment:", error);
         if (error?.code === 'permission-denied') {
-            throw new Error('Je hebt geen toestemming om deze comment te verwijderen. Alleen admins kunnen comments verwijderen.');
+            throw new Error('Je hebt geen toestemming om deze comment te verwijderen.');
         }
         throw error;
     }
