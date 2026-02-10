@@ -21,4 +21,7 @@
 
 <script setup lang="ts">
 import sdpImg from '~/assets/sdp.png'
+useHead({
+  title: 'Internship'
+})
 </script>

@@ -67,6 +67,10 @@ definePageMeta({
   middleware: 'guest'
 })
 
+useHead({
+  title: 'Login'
+})
+
 const email = ref("");
 const password = ref("");
 const error = ref("");

@@ -8,6 +8,7 @@ import { CalendarIcon } from '@heroicons/vue/24/outline';
 import { useAuth } from "~~/composables/useAuth";
 import { TrashIcon, ArrowRightIcon, LockClosedIcon } from '@heroicons/vue/24/outline'
 
+
 const route = useRoute();
 const blogId = route.params.id as string;
 
@@ -21,6 +22,12 @@ const comments = ref<BlogComment[]>([]);
 const newComment = ref("");
 const role = ref<"user" | "admin" | null>(null);
 let unsubscribe: (() => void) | null = null;
+
+useHead({
+  title: computed(() =>
+    blog.value ? `${blog.value.title} - Senne Blog` : "Blog laden..."
+  )
+})
 
 onMounted(async () => {
   if (!process.client) return;

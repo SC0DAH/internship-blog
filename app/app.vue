@@ -1,4 +1,7 @@
 <script setup>
+useHead({
+  titleTemplate: '%s - Sennecx'
+})
 </script>
 
 <template>

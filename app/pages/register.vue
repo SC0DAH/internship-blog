@@ -79,6 +79,10 @@ import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
 definePageMeta({
   middleware: 'guest'
 })
+useHead({
+  title: 'Register'
+})
+
 
 const name = ref("");
 const email = ref("");

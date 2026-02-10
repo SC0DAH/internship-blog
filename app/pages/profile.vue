@@ -3,6 +3,10 @@ import { useAuth } from '~~/composables/useAuth'
 definePageMeta({
   middleware: 'my-middleware'
 })
+useHead({
+  title: 'Profile'
+})
+
 const { user, logoutUser } = useAuth()
 const logout = async () => {
   try {

@@ -4,6 +4,10 @@ import { useBlog } from "~~/composables/useBlog";
 import type { BlogPost } from "~/interfaces/types";
 import { useAuth } from '~~/composables/useAuth'
 import { TrashIcon } from '@heroicons/vue/24/outline'
+useHead({
+  title: 'Blogs'
+})
+
 
 const blogs = ref<BlogPost[]>([]);
 const title = ref("");
