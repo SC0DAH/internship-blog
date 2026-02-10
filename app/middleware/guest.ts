@@ -4,11 +4,13 @@ import { useAuth } from '~~/composables/useAuth'
 export default defineNuxtRouteMiddleware(async (to) => {
   const { user, loading } = useAuth()
 
-  if (loading.value) {
-    return
+  if (process.server) return
+
+  while (loading.value) {
+    await new Promise(resolve => setTimeout(resolve, 10))
   }
 
-  if (user.value && to.path !== '/') {
-    return navigateTo('/')
+  if (user.value && (to.path === '/login' || to.path === '/register')) {
+    return navigateTo('/profile')
   }
 })
