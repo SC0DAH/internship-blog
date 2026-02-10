@@ -63,6 +63,9 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuth } from "~~/composables/useAuth";
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
+definePageMeta({
+  middleware: 'guest'
+})
 
 const email = ref("");
 const password = ref("");

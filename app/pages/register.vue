@@ -76,6 +76,9 @@
 import { ref } from "vue";
 import { useAuth } from "~~/composables/useAuth";
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
+definePageMeta({
+  middleware: 'guest'
+})
 
 const name = ref("");
 const email = ref("");
@@ -107,7 +110,6 @@ async function handleRegister() {
     const res = await registerUser(name.value, email.value, password.value);
     success.value = res.message;
 
-    // reset form
     name.value = "";
     email.value = "";
     password.value = "";
