@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  css: ['~/assets/css/main.css'],
   runtimeConfig: {
     public: {
       firebaseApiKey: process.env.NUXT_PUBLIC_FIREBASE_API_KEY,
@@ -15,5 +16,13 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
   ],
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true }
+  devtools: { enabled: true },
+  plugins:[
+    '~/plugins/firebase.client.ts',
+    '~/plugins/analytics.client.ts',
+  ],
+  // tailwindcss: {
+  //   exposeConfig: true,
+  //   injectPosition: 'first',
+  // }
 })

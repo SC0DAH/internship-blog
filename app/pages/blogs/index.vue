@@ -4,6 +4,7 @@ import { useBlog } from "~~/composables/useBlog";
 import type { BlogPost } from "~/interfaces/types";
 import { useAuth } from '~~/composables/useAuth'
 import { TrashIcon } from '@heroicons/vue/24/outline'
+import { useAnalytics } from "~~/composables/useAnalytics";
 useHead({
   title: 'Blogs'
 })
@@ -14,6 +15,7 @@ const title = ref("");
 const content = ref("");
 const tags = ref("");
 const { getAllBlogsRealtime, createBlog, deleteBlog } = useBlog();
+const { trackEvent } = useAnalytics()
 
 const { user, loading: authLoading, getUserRole } = useAuth();
 const role = ref<"user" | "admin" | null>(null);
@@ -40,6 +42,7 @@ onMounted(async () => {
     blogs.value = data;
     loading.value = false;
   });
+  trackEvent('blogs_page_visited');
 });
 
 watch(user, async (newUser) => {

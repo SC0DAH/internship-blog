@@ -7,6 +7,7 @@ import type { BlogComment, BlogPost } from "~/interfaces/types";
 import { CalendarIcon } from '@heroicons/vue/24/outline';
 import { useAuth } from "~~/composables/useAuth";
 import { TrashIcon, ArrowRightIcon, LockClosedIcon } from '@heroicons/vue/24/outline'
+import { useAnalytics } from "~~/composables/useAnalytics";
 
 
 const route = useRoute();
@@ -15,6 +16,7 @@ const blogId = route.params.id as string;
 const { getBlog, incrementViews } = useBlog();
 const { getCommentsRealtime, addComment, deleteComment } = useComments();
 const { user, getUserRole } = useAuth();
+const { trackEvent } = useAnalytics()
 
 const blog = ref<BlogPost | null>(null);
 const pending = ref(true);
@@ -37,6 +39,10 @@ onMounted(async () => {
     if (blog.value) {
       await incrementViews(blogId);
       blog.value.views = (blog.value.views || 0) + 1;
+      trackEvent('blog_visited', {
+        blog_id: blogId,
+        blog_title: blog.value.title,
+      })
     }
   } catch (err) {
     console.error("Blog ophalen mislukt:", err);
@@ -75,6 +81,12 @@ const submitComment = async () => {
       commenterDisplayName: user.value.displayName || "Anoniem",
       content: newComment.value,
     });
+
+    trackEvent('comment_posted', {
+      blog_id: blogId,
+      blog_title: blog.value?.title,
+    });
+
     newComment.value = "";
   } catch (err: any) {
     console.error("Comment toevoegen mislukt:", err);

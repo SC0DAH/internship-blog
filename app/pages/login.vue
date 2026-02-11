@@ -63,6 +63,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuth } from "~~/composables/useAuth";
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
+import { useAnalytics } from "~~/composables/useAnalytics";
 definePageMeta({
   middleware: 'guest'
 })
@@ -76,6 +77,7 @@ const password = ref("");
 const error = ref("");
 const loading = ref(false);
 const showPassword = ref(false);
+const { trackEvent } = useAnalytics()
 
 const router = useRouter();
 const { loginUser } = useAuth();
@@ -92,7 +94,7 @@ async function handleLogin() {
 
   try {
     await loginUser(email.value, password.value);
-
+    trackEvent('login', { method: 'email' });
     router.push("/");
   } catch (err: any) {
     console.error(err);
