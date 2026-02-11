@@ -16,7 +16,8 @@ const blogId = route.params.id as string;
 const { getBlog, incrementViews } = useBlog();
 const { getCommentsRealtime, addComment, deleteComment } = useComments();
 const { user, getUserRole } = useAuth();
-const { trackEvent } = useAnalytics()
+const { trackEvent } = useAnalytics();
+const textareaRef = ref<HTMLTextAreaElement | null>(null);
 
 const blog = ref<BlogPost | null>(null);
 const pending = ref(true);
@@ -24,6 +25,14 @@ const comments = ref<BlogComment[]>([]);
 const newComment = ref("");
 const role = ref<"user" | "admin" | null>(null);
 let unsubscribe: (() => void) | null = null;
+
+function autoResize() {
+  const el = textareaRef.value
+  if (!el) return
+
+  el.style.height = "auto"
+  el.style.height = el.scrollHeight + "px"
+}
 
 useHead({
   title: computed(() =>
@@ -178,12 +187,17 @@ const handleDeleteComment = async (commentId: string) => {
     <div class="mt-4">
   <div class="relative">
     <textarea
+      ref="textareaRef"
       v-model="newComment"
       :placeholder="user ? 'Schrijf een reactie...' : 'Je moet ingelogd zijn om een comment te kunnen plaatsen'"
       :disabled="!user"
+      @input="autoResize"
       @keydown.enter.exact.prevent="submitComment"
       rows="1"
-      class="w-full border p-3 pr-24 rounded resize-none bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-400"
+      class="w-full border p-3 pr-24 rounded resize-none bg-gray-50
+            overflow-hidden
+            min-h-[72px] md:min-h-[40px]
+            disabled:cursor-not-allowed disabled:text-gray-400"
     ></textarea>
 
     <button
