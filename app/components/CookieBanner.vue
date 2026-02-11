@@ -17,24 +17,30 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useAnalytics } from '~~/composables/useAnalytics'
 const showBanner = ref(false)
+const { enableAnalytics, disableAnalytics } = useAnalytics()
 
-
-const accept = () => {
+const accept = async () => {
   localStorage.setItem('cookie-consent', 'true')
   showBanner.value = false
-  console.log('Cookies geaccepteerd')
-  // TODO: hier later GA laden
+  await enableAnalytics()
 }
 
-const decline = () => {
+const decline = async () => {
   localStorage.setItem('cookie-consent', 'false')
   showBanner.value = false
-  console.log('Cookies geweigerd')
+  await disableAnalytics()
 }
 
-onMounted(() => {
+onMounted(async () => {
   const consent = localStorage.getItem('cookie-consent')
-  if (!consent) showBanner.value = true
+  if (!consent) {
+    showBanner.value = true
+  } else if (consent === 'true') {
+    await enableAnalytics()
+  } else {
+    await disableAnalytics() // make sure it's off on return visits too
+  }
 })
 </script>
