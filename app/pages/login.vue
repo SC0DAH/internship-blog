@@ -104,6 +104,8 @@ async function handleLogin() {
       error.value = "Wachtwoord incorrect.";
     } else if (err.code === "auth/invalid-email") {
       error.value = "Ongeldig emailadres.";
+    } else if (err.code === "auth/invalid-credential") {
+      error.value = "Ongeldige inloggegevens.";
     }
     else {
       console.error("Login error:", err.message);
